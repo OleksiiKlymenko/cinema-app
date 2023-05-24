@@ -7,13 +7,15 @@ import cinema.service.RoleService;
 import cinema.service.ShoppingCartService;
 import cinema.service.UserService;
 import java.util.Set;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserService userService;
     private final ShoppingCartService shoppingCartService;
-    private final RoleService roleService;
+    private RoleService roleService;
+    Role.RoleName DEFAULT_ROLE = Role.RoleName.USER;
 
     public AuthenticationServiceImpl(UserService userService,
                                      ShoppingCartService shoppingCartService,
@@ -28,7 +30,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = new User();
         user.setEmail(email);
         user.setPassword(password);
-        user.setRoles(Set.of(roleService.getByName(Role.RoleName.USER)));
+        user.setRoles(Set.of(roleService.getByName(DEFAULT_ROLE)));
         userService.add(user);
         shoppingCartService.registerNewShoppingCart(user);
         return user;
